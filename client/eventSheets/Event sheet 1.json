@@ -1,0 +1,351 @@
+{
+	"name": "Event sheet 1",
+	"events": [
+		{
+			"eventType": "variable",
+			"name": "endpoint",
+			"type": "string",
+			"initialValue": "\"http://localhost:2567\"",
+			"comment": "",
+			"isStatic": false,
+			"isConstant": false,
+			"sid": 667901343648224
+		},
+		{
+			"eventType": "group",
+			"disabled": false,
+			"title": "Note",
+			"description": "",
+			"isActiveOnStart": false,
+			"children": [
+				{
+					"eventType": "comment",
+					"text": "⚠️Note: Colyseus addon is modified to prevent 'OnAdd'/'OnChange' Error. \nInstead, \"key is undefined\" printed to console and field is not being listened.\nChanges:\n- Added small guard check to prevent listening on faulty fields."
+				},
+				{
+					"eventType": "script",
+					"script": "//c3runtime/instance.js\n\nfor (let field in schema) {\n\tconst schemaType = typeof(schema[field]);\n\n\t//line 85\n\tif (schemaInstance[field] === undefined) {\n\t\tconsole.warn(`Key '${field}' is undefined.`);\n\t\tcontinue;\n\t}\n\n}"
+				}
+			],
+			"sid": 218357509495264
+		},
+		{
+			"eventType": "group",
+			"disabled": false,
+			"title": "Colyseus",
+			"description": "",
+			"isActiveOnStart": true,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "on-start-of-layout",
+							"objectClass": "System",
+							"sid": 781375379191406
+						}
+					],
+					"actions": [
+						{
+							"id": "join-or-create-room",
+							"objectClass": "Colyseus",
+							"sid": 898695330065223,
+							"parameters": {
+								"name": "\"my_room\"",
+								"options": "Colyseus.JSON(\"{token: 'xyz'}\")"
+							}
+						}
+					],
+					"sid": 310327450911778
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "on-leave-room",
+							"objectClass": "Colyseus",
+							"sid": 676308570677306
+						}
+					],
+					"actions": [
+						{
+							"id": "log",
+							"objectClass": "Browser",
+							"sid": 848294143871926,
+							"parameters": {
+								"type": "log",
+								"message": "Colyseus.CloseCode"
+							}
+						}
+					],
+					"sid": 949580145420214,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-two-values",
+									"objectClass": "System",
+									"sid": 338979201356941,
+									"parameters": {
+										"first-value": "Colyseus.CloseCode",
+										"comparison": 0,
+										"second-value": "4000"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "log",
+									"objectClass": "Browser",
+									"sid": 679040486239363,
+									"parameters": {
+										"type": "log",
+										"message": "\"Left intentionally!\""
+									}
+								}
+							],
+							"sid": 221526810604473
+						},
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "compare-two-values",
+									"objectClass": "System",
+									"sid": 853035492590436,
+									"parameters": {
+										"first-value": "Colyseus.CloseCode",
+										"comparison": 1,
+										"second-value": "4000"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "log",
+									"objectClass": "Browser",
+									"sid": 353365749334066,
+									"parameters": {
+										"type": "log",
+										"message": "\"Left unintentionally!\""
+									}
+								}
+							],
+							"sid": 555559186119233
+						}
+					]
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "on-join-error",
+							"objectClass": "Colyseus",
+							"sid": 197926970050546
+						},
+						{
+							"id": "on-error",
+							"objectClass": "Colyseus",
+							"sid": 640540060232809
+						},
+						{
+							"id": "on-room-error",
+							"objectClass": "Colyseus",
+							"sid": 319118375783096
+						}
+					],
+					"actions": [
+						{
+							"id": "log",
+							"objectClass": "Browser",
+							"sid": 942732545501694,
+							"parameters": {
+								"type": "log",
+								"message": "Colyseus.ErrorCode"
+							}
+						},
+						{
+							"id": "log",
+							"objectClass": "Browser",
+							"sid": 125541676094987,
+							"parameters": {
+								"type": "log",
+								"message": "Colyseus.ErrorMessage"
+							}
+						}
+					],
+					"sid": 537596816916308,
+					"children": [
+						{
+							"eventType": "block",
+							"conditions": [
+								{
+									"id": "has-error-code",
+									"objectClass": "Colyseus",
+									"sid": 701041767886951,
+									"parameters": {
+										"cmp": "=",
+										"code": "Colyseus.ErrorCode_SERVER_OFFLINE"
+									}
+								}
+							],
+							"actions": [
+								{
+									"id": "log",
+									"objectClass": "Browser",
+									"sid": 599001405711583,
+									"parameters": {
+										"type": "log",
+										"message": "\"Cannot join because server is offline!\""
+									}
+								}
+							],
+							"sid": 974262644404674
+						}
+					],
+					"isOrBlock": true
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "on-room-statechange",
+							"objectClass": "Colyseus",
+							"sid": 492276837323363
+						}
+					],
+					"actions": [
+						{
+							"id": "parse",
+							"objectClass": "JSON",
+							"sid": 849711193259224,
+							"parameters": {
+								"data": "Colyseus.CurrentValue"
+							}
+						},
+						{
+							"id": "set-text",
+							"objectClass": "Text",
+							"sid": 758249667459934,
+							"parameters": {
+								"text": "JSON.ToBeautifiedString"
+							}
+						}
+					],
+					"sid": 960626161679537
+				}
+			],
+			"sid": 109572058384874
+		},
+		{
+			"eventType": "group",
+			"disabled": false,
+			"title": "Filtered fields not listening bug #28",
+			"description": "https://github.com/colyseus/colyseus-construct3/issues/28",
+			"isActiveOnStart": true,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "on-clicked",
+							"objectClass": "FilterBug1",
+							"sid": 973008195822572
+						}
+					],
+					"actions": [
+						{
+							"id": "room-send",
+							"objectClass": "Colyseus",
+							"sid": 998956670642123,
+							"parameters": {
+								"type": "\"filterBug1\"",
+								"message": "0"
+							}
+						}
+					],
+					"sid": 997263886490962
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "on-clicked",
+							"objectClass": "FilterBug2",
+							"sid": 576627415939250
+						}
+					],
+					"actions": [
+						{
+							"id": "room-send",
+							"objectClass": "Colyseus",
+							"sid": 323465788154473,
+							"parameters": {
+								"type": "\"filterBug2\"",
+								"message": "0"
+							}
+						}
+					],
+					"sid": 387453462936412
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "state-collection-item-change",
+							"objectClass": "Colyseus",
+							"sid": 583375022902047,
+							"parameters": {
+								"path": "\"entities.player.subEntities\""
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "log",
+							"objectClass": "Browser",
+							"sid": 414202281644333,
+							"parameters": {
+								"type": "log",
+								"message": "\"[player] \"&Colyseus.CurrentKey&\": \"&Colyseus.CurrentValue"
+							}
+						}
+					],
+					"sid": 432216287977260
+				},
+				{
+					"eventType": "comment",
+					"text": "This one is not being listened."
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "state-collection-item-change",
+							"objectClass": "Colyseus",
+							"sid": 364286854673039,
+							"parameters": {
+								"path": "\"entities.anotherPlayer.subEntities\""
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "log",
+							"objectClass": "Browser",
+							"sid": 606946536959464,
+							"parameters": {
+								"type": "log",
+								"message": "\"[anotherPlayer] \"&Colyseus.CurrentKey&\": \"&Colyseus.CurrentValue"
+							}
+						}
+					],
+					"sid": 412970792250434
+				}
+			],
+			"sid": 350260019627382
+		}
+	],
+	"sid": 851726716641742
+}
