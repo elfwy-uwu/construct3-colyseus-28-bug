@@ -11,8 +11,6 @@ export class MyRoom extends Room<MyRoomState> {
 
     this.onMessage("filterBug1", (client, message) => this.filterBug1());
     this.onMessage("filterBug2", (client, message) => this.filterBug2());
-    this.onMessage("swapStatesBug1", (client, message) => this.swapStatesBug1());
-    this.onMessage("swapStatesBug2", (client, message) => this.swapStatesBug2());
   }
 
   filterBug1(){
@@ -41,29 +39,5 @@ export class MyRoom extends Room<MyRoomState> {
       
       player.subEntities.push(new SubEntity())
     })
-  }
-
-  swapStatesBug1(){
-    const state1 = new State()
-    const newSubState = new SubState()
-    for (let i = 0; i < 3; i++) {
-      //newSubState.array.push(new ArrayElement())
-      newSubState.numberMap.set(i.toString(), i)
-    }
-    state1.subState = newSubState
-    this.state.states.set('state', state1);
-    //this.state.states['$changes'].touch('state')
-  }
-
-  swapStatesBug2(){
-    let state = this.state.states.get('state')
-    const newSubState = new SubState()
-    for (let i = 0; i < 3; i++) {
-      //newSubState.array.push(new ArrayElement())
-      newSubState.numberMap.set(i.toString(), 3 - i)
-    }
-    state.subState = newSubState
-    //this.state.states['$changes'].touch('state')
-    //console.log(this.state.states.get('state'), state2)
   }
 }
