@@ -1,6 +1,5 @@
 import { Schema, type, MapSchema } from "@colyseus/schema";
 import { Entity } from "./Entity";
-import { State } from "./State";
 
 export class MyRoomState extends Schema {
 

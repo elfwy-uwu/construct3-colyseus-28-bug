@@ -1,7 +1,6 @@
 import { Room, Client } from "@colyseus/core";
 import { MyRoomState } from "./schema/MyRoomState";
 import { Entity as Entity, SubEntity } from "./schema/Entity";
-import { ArrayElement, State, SubState } from "./schema/State";
 
 export class MyRoom extends Room<MyRoomState> {
   maxClients = 4;

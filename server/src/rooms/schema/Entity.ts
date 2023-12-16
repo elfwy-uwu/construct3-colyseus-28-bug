@@ -20,7 +20,8 @@ export class Entity extends Schema {
    * 
    * We need to filter out the whole field only the first time. 
    * Assuming that in future we are supposed to recieve this information which
-   * previously was filtered.
+   * previously was filtered. Note that we need to have 1 instance with undfiltered
+   * properties in order to register fields on client.
    */
   filtered: boolean = false
 
